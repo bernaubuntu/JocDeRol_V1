@@ -17,9 +17,14 @@ public class JocDeRol {
         pruebaFase();
     }
     private static void pruebaFase(){
-        Player jugador=new Player();
-        Alien et=new Alien();
-        Human humano=new Human();
-        Warrior guerrero=new Warrior();
+        Alien et = new Alien("Capitan america", 15, 7, 40);
+        Human humano = new Human("John Smith", 13, 8, 39);
+        Warrior guerrero = new Warrior("Martian PK", 27, 2, 32);
+        
+        humano.attack(guerrero);
+        humano.attack(guerrero);
+        humano.attack(guerrero);
+        humano.attack(guerrero);
+        guerrero.attack(humano);
     }
 }
