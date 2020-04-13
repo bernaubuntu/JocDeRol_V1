@@ -20,4 +20,27 @@ public class Warrior extends Human{
         super(name, attackPoints, defensePoints, life);
     }
     
+    //@Override
+    //public void attack(Player p){
+    //    super.attack(p);
+    //}
+    
+    @Override
+    protected void hit(int attack){
+        int diferencia = attack-this.defensePoints;
+        if (this instanceof Warrior) {
+            if (diferencia<=5) {
+                diferencia=0;
+                System.out.println(""+this.getName()+" tiene agilidad");
+            }
+        }
+        int nuevavida = this.life-diferencia;
+        if (nuevavida<0) {
+            nuevavida=0;
+        }
+        String cadena =""+ this.getName()+" es golpeado con "+attack +" puntos y se defiende con "+this.defensePoints+". Vidas: "+this.life+" - "+diferencia+" = ";
+        cadena+=""+nuevavida;
+        System.out.println(cadena);
+        this.life=nuevavida;
+    }
 }
