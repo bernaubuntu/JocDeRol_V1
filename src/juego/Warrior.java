@@ -27,7 +27,7 @@ public class Warrior extends Human{
     
     @Override
     protected void hit(int attack){
-        int diferencia = attack-this.defensePoints;
+        int diferencia = attack-this.defensePoints+this.sumarBonusDefensa();
         if (this instanceof Warrior) {
             if (diferencia<=5) {
                 diferencia=0;
@@ -38,7 +38,7 @@ public class Warrior extends Human{
         if (nuevavida<0) {
             nuevavida=0;
         }
-        String cadena =""+ this.getName()+" es golpeado con "+attack +" puntos y se defiende con "+this.defensePoints+". Vidas: "+this.life+" - "+diferencia+" = ";
+        String cadena =""+ this.getName()+" es golpeado con "+attack +" puntos y se defiende con "+(this.defensePoints+this.sumarBonusDefensa())+". Vidas: "+this.life+" - "+diferencia+" = ";
         cadena+=""+nuevavida;
         System.out.println(cadena);
         this.life=nuevavida;

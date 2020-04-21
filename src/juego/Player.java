@@ -20,6 +20,7 @@ public abstract class Player {
     protected int defensePoints;// modificado a protected para poder acceder desde la clase heredada
     protected int life;// modificado a protected para poder acceder desde la clase heredada
     private ArrayList<Team> teams;
+    private ArrayList<Item> items;
     
     public Player() {
         this("Novato",5,1,15);
@@ -37,7 +38,8 @@ public abstract class Player {
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
         this.life = life;
-        this.teams=new ArrayList();
+        this.teams = new ArrayList();
+        this.items = new ArrayList();
     }
 
     public void add(Team t){
@@ -70,6 +72,55 @@ public abstract class Player {
         return false;
     }
     
+    public void add(Item i){
+        if (!existeItem(i)) {
+            if (i.jugador==null) {
+                this.items.add(i);
+                i.jugador = this;
+            }
+        }
+    }
+    
+    public void remove(Item i){
+        if (existeItem(i)) {
+            if (i.jugador!=null) {
+                this.items.remove(i);
+                i.jugador = null;
+            }
+        }
+    }
+
+    private boolean existeItem(Item i){
+        if (items.size()==0) {
+            return false;
+        }
+        for (Iterator<Item> it = items.iterator(); it.hasNext();) {
+            Item otro=it.next();
+            if (otro.equals(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int sumarBonusAtaque(){
+        int result=0;
+        for (Iterator<Item> it = items.iterator(); it.hasNext();) {
+            Item otro=it.next();
+            result+=otro.getAttackBonus();
+        }
+        return result;
+    }
+    
+    public int sumarBonusDefensa(){
+        int result=0;
+        for (Iterator<Item> it = items.iterator(); it.hasNext();) {
+            Item otro=it.next();
+            result+=otro.getDefenseBonus();
+        }
+        return result;
+    }
+
     public void attack(Player p){
         if (p.life<=0 || this.life<=0) {
             return;
@@ -91,9 +142,9 @@ public abstract class Player {
         System.out.println("Atacado:  "+p+"\n");
         
         // ataque
-        p.hit(this.attackPoints);
+        p.hit(this.attackPoints+this.sumarBonusAtaque());
         if (p.life>0) {
-            this.hit(p.attackPoints);
+            this.hit(p.attackPoints+p.sumarBonusAtaque());
         }
         // despues del ataque
         System.out.println("\nAtacante: "+this);
@@ -102,7 +153,7 @@ public abstract class Player {
     }
     
     protected void hit(int attack){
-        int diferencia = attack-this.defensePoints;
+        int diferencia = attack-(this.defensePoints+this.sumarBonusDefensa());
         //if (this instanceof Warrior) {
         //    if (diferencia<=5) {
         //        diferencia=0;
@@ -113,7 +164,7 @@ public abstract class Player {
         if (nuevavida<0) {
             nuevavida=0;
         }
-        String cadena =""+ this.name+" es golpeado con "+attack +" puntos y se defiende con "+this.defensePoints+". Vidas: "+this.life+" - "+diferencia+" = ";
+        String cadena =""+ this.name+" es golpeado con "+attack +" puntos y se defiende con "+(this.defensePoints+this.sumarBonusDefensa())+". Vidas: "+this.life+" - "+diferencia+" = ";
         cadena+=""+nuevavida;
         System.out.println(cadena);
         this.life=nuevavida;
@@ -163,6 +214,12 @@ public abstract class Player {
     public String toString(){
         String result=this.name+" PA:"+this.attackPoints+" / PD:"+this.defensePoints+" / PV:"+this.life;
         result+=" ( pertenece a "+teams.size()+" equipo"+((teams.size()>1)?"s":"")+" )";
+        if (items.size()>0) {
+            result+= " tiene los items:";
+            for (Iterator<Item> it = items.iterator(); it.hasNext();) {
+                result+="\n--  "+it.next().toString();
+            }
+        }
         return result;
     }
 

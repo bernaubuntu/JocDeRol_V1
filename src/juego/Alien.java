@@ -40,9 +40,9 @@ public class Alien extends Player{
         System.out.println("Atacado:  "+p+"\n");
         
         // ataque
-        p.hit(this.attackPoints);
+        p.hit(this.attackPoints+this.sumarBonusAtaque());
         if (p.life>0) {
-            this.hit(p.attackPoints);
+            this.hit(p.attackPoints+p.sumarBonusAtaque());
         }
         // despues del ataque
         System.out.println("\nAtacante: "+this);

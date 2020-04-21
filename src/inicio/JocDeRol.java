@@ -104,5 +104,27 @@ public class JocDeRol {
         //si un Player ya pertenece a un equipo no se puede volver a añadir
         equipo1.add(et);
         System.out.println("\n26: "+equipo1);
+        
+        //comprobación para v5
+        System.out.println("\nComprobar v5\n");
+        Item arma1=new Item("Hacha",4,1);
+        Item arma2=new Item("Escudo",-1,5);
+        Item arma3=new Item("Espada",5,0);
+        humano.add(arma1);
+        System.out.println(""+humano);
+        et.add(arma2);
+        guerrero.add(arma3);
+        System.out.println(""+et);
+        System.out.println("Prueba de ataque con bonus");
+        humano.attack(et);
+        System.out.println(""+humano);
+        System.out.println(""+et);
+        
+        System.out.println("\n** *** *** *** \n");
+        humano.attack(guerrero);
+        //No permite añadir un item si pertenece a otro jugador
+        humano.add(arma3);
+        System.out.println(""+humano);
+        System.out.println(""+guerrero);
     }
 }
