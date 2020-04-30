@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  *
- * @author damsp
+ * @author Bernardo Presencia
  */
 public class Team {
     public String name;
@@ -22,17 +22,21 @@ public class Team {
         this.players=new ArrayList();
     }
     
-    public void add(Player p){
+    public void add(Player p) throws JugadorRepetidoException{
         if (!existePlayer(p)) {
-            players.add(p);
             p.add(this);
+            players.add(p);
+        }else{
+            throw new JugadorRepetidoException("El jugador '"+p.getName()+"' ya pertenece al equipo '"+this.name+"'");
         }
     }
     
-    public void remove(Player p){
+    public void remove(Player p) throws JugadorNoPerteneceEquipoException{
         if (existePlayer(p)) {
             p.remove(this);
             players.remove(p);
+        }else{
+            throw new JugadorNoPerteneceEquipoException("El jugador '"+p.getName()+"' no pertenece al equipo '"+this.name+"'");
         }
     }
 

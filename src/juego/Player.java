@@ -8,6 +8,8 @@ package juego;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -42,20 +44,21 @@ public abstract class Player {
         this.items = new ArrayList();
     }
 
-    public void add(Team t){
+    public void add(Team t) throws JugadorRepetidoException{
         if (!existeTeam(t)) {
-            teams.add(t);
-            t.add(this);
-            //t.add(this);
-            //System.out.println("Equipo añadido a Player");
+                teams.add(t);
+                //t.add(this);
+        } else {
+            throw new JugadorRepetidoException("El Equipo '"+t.name+"' ya pertenece al jugador '"+this.getName()+"'");
         }
     }
     
-    public void remove(Team t){
+    public void remove(Team t) throws JugadorNoPerteneceEquipoException{
         if (existeTeam(t)) {
+            //t.remove(this);
             teams.remove(t);
-            t.remove(this);
-            //System.out.println("Equipo eliminado de Player");
+        }else {
+            throw new JugadorNoPerteneceEquipoException("El Jugador '"+this.getName()+"' No pertenece al Equipo '"+t.name+"'");
         }
     }
 
@@ -72,12 +75,19 @@ public abstract class Player {
         return false;
     }
     
-    public void add(Item i){
+    public void add(Item i) throws ObjetoRepetidoException{
         if (!existeItem(i)) {
             if (i.jugador==null) {
-                this.items.add(i);
-                i.jugador = this;
+                //this.items.add(i);
+                //i.jugador = this;
+                if (this.items.add(i)) {
+                    i.jugador = this;
+                }
+            }else{
+                throw new ObjetoRepetidoException("El Objeto '"+i.getName()+"' ya pertenece a '"+i.jugador.getName()+"'");
             }
+        }else{
+            throw new ObjetoRepetidoException("El Objeto '"+i.getName()+"' ya pertenece a '"+this.getName()+"'");
         }
     }
     
@@ -121,7 +131,13 @@ public abstract class Player {
         return result;
     }
 
-    public void attack(Player p){
+    public void attack(Player p) throws MuertoException{
+        if (this.life<=0) {
+             throw new MuertoException("El jugador "+this.getName()+" está muerto y no puede atacar");
+        }
+        if (p.life<=0) {
+             throw new MuertoException("El jugador "+p.getName()+" está muerto y no puede ser atacado");
+        }
         if (p.life<=0 || this.life<=0) {
             return;
         }
@@ -210,11 +226,16 @@ public abstract class Player {
     }
     */
     
+    public ArrayList<Team> getEquipos() {
+        return this.teams;
+    }
+
     @Override
     public String toString(){
         String result=this.name+" PA:"+this.attackPoints+" / PD:"+this.defensePoints+" / PV:"+this.life;
-        result+=" ( pertenece a "+teams.size()+" equipo"+((teams.size()>1)?"s":"")+" )";
+        result+=" ( pertenece a "+teams.size()+" equipo"+((teams.size()!=1)?"s":"")+" )";
         if (items.size()>0) {
+            System.out.println("Cantidad de items: "+items.size()+"----"+result);
             result+= " tiene los items:";
             for (Iterator<Item> it = items.iterator(); it.hasNext();) {
                 result+="\n--  "+it.next().toString();
@@ -229,7 +250,14 @@ public abstract class Player {
             return false;
         }
         final Player other = (Player) obj;
+        /*
         if (!Objects.equals(this.name, other.name) || !Objects.equals(this.attackPoints, other.attackPoints) || !Objects.equals(this.defensePoints, other.defensePoints) || !Objects.equals(this.life, other.life)) {
+            return false;
+        }
+        */
+        //Modificado porque en el V6 pide que solo seran iguales si tienen el mismo nombre
+        //No menciona nada si se diferencia entre mayúsculas y minusculas.
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         return true;

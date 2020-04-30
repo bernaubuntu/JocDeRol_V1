@@ -7,13 +7,13 @@ package juego;
 
 /**
  *
- * @author damsp
+ * @author Bernardo Presencia
  */
 public class Alien extends Player{
 
     public Alien() {
         super();
-        System.out.println("He creado un Alien");
+        //System.out.println("He creado un Alien");
     }
 
     public Alien(String name, int attackPoints, int defensePoints, int life) {
@@ -21,7 +21,13 @@ public class Alien extends Player{
     }
     
     @Override
-    public void attack(Player p){
+    public void attack(Player p) throws MuertoException{
+        if (this.life<=0) {
+             throw new MuertoException("El jugador "+this.getName()+" está muerto y no puede atacar");
+        }
+        if (p.life<=0) {
+             throw new MuertoException("El jugador "+p.getName()+" está muerto y no puede ser atacado");
+        }
         if (p.life<=0 || this.life<=0) {
             return;
         }

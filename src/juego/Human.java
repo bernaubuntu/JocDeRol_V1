@@ -7,7 +7,7 @@ package juego;
 
 /**
  *
- * @author damsp
+ * @author Bernardo Presencia
  */
 public class Human extends Player{
 

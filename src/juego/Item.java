@@ -9,13 +9,13 @@ import java.util.Objects;
 
 /**
  *
- * @author damsp
+ * @author Bernardo Presencia
  */
 public class Item {
     private String name;
     private int attackBonus;
     private int defenseBonus;
-    protected Player jugador;
+    public Player jugador;
 
     public Item(String name, int attackBonus, int defenseBonus) {
         this.name = name;
@@ -39,12 +39,15 @@ public class Item {
     @Override
     public String toString(){
         String result=this.name+" BA:"+this.attackBonus+" / BD:"+this.defenseBonus;
+        if (this.jugador!=null) {
+            result+=" -- Propietario: "+this.jugador.getName();
+        }
         return result;
     }
 
     @Override
     public boolean equals(Object obj){
-        if (obj == null || !(obj instanceof Player)) {
+        if (obj == null || !(obj instanceof Item)) {
             return false;
         }
         final Item other = (Item) obj;

@@ -7,6 +7,7 @@ package io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *
@@ -37,6 +38,91 @@ public class Leer {
 
     } //leer texto
 
+    /**
+    * Llig un text del teclat. 
+    * @param mensaje Text que es passa a l'usuaro
+    * @param cadena Array de String con los caracteres permitidos
+    * @return el text introduit. Blanc en cas d'error
+    */
+    public static String leerArray(String mensaje,String cadena[]) {
+        String respuesta=null;
+        do{
+            try {
+                System.out.print(mensaje);
+                respuesta= entradaConsola.readLine();
+            } // ()
+            catch (IOException ex) {
+                return "";
+            }
+            if (respuesta!=null && cadena.length>0) {
+                if (!existeEnArray(cadena,respuesta)) {
+                    System.out.println("\n\tSolo se permiten: "+Arrays.toString(cadena));
+                    respuesta=null;
+                }
+            }
+        } while(respuesta ==null);
+        esperarMiliSegundos(50);
+        return respuesta;
+
+    } //leer Array String
+
+    /**
+    * Introducció de numeros enters
+    * @param mensaje Text que es passa a l'usuari
+    * @param numeros Array de int con los números permitidos
+    * @return un enter amb el valor
+    */
+    public static int leerArray(String mensaje, int numeros[]) {
+        int n=0;
+        boolean aconseguit=false;
+        while(!aconseguit){
+            try{
+                n= Integer.parseInt(leerTexto(mensaje));
+                aconseguit=true;
+                if (numeros.length>0) {
+                    //if (Arrays.asList(numeros).contains(n)) {
+                    if (!existeEnArray(numeros,n)) {
+                        System.out.println("\n\tSolo se permiten: "+Arrays.toString(numeros));
+                        aconseguit=false;
+                    }
+                }
+            }
+            catch(NumberFormatException ex){
+                System.out.println("\tDebes poner un número correcto");
+            }
+        }//while
+        return n;
+    } //leer Array int
+
+    /**
+     * Devuelve true si encuentra la busqueda dentro de arreglo
+     * @param arreglo Array del tipo String
+     * @param busqueda String a buscar
+     * @return 
+     */
+    private static boolean existeEnArray(String arreglo[], String busqueda) {
+        for (int x = 0; x < arreglo.length; x++) {
+            if (arreglo[x].equalsIgnoreCase(busqueda)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Devuelve true si encuentra la busqueda dentro de arreglo
+     * @param arreglo Array del tipo int
+     * @param busqueda int a buscar
+     * @return 
+     */
+    private static boolean existeEnArray(int arreglo[], int busqueda) {
+        for (int x = 0; x < arreglo.length; x++) {
+            if (arreglo[x] == busqueda) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
     * Introducció de numeros enters
